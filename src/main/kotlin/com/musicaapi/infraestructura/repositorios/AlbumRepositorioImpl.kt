@@ -15,16 +15,16 @@ class AlbumRepositorioImpl : AlbumRepositorio {
         id = fila[TablaAlbumes.id],
         title = fila[TablaAlbumes.title],
         releaseYear = fila[TablaAlbumes.releaseYear],
-        artistaId = fila[TablaAlbumes.artistaId]
+        artistId = fila[TablaAlbumes.artistId]
     )
 
-    override suspend fun crear(title: String, artistaId: UUID, releaseYear: Int): Album =
+    override suspend fun crear(title: String, artistId: UUID, releaseYear: Int): Album =
         GestorBaseDatos.consulta {
             val nuevoId = UUID.randomUUID()
             TablaAlbumes.insert {
                 it[id] = nuevoId
                 it[TablaAlbumes.title] = title
-                it[TablaAlbumes.artistaId] = artistaId
+                it[TablaAlbumes.artistId] = artistId
                 it[TablaAlbumes.releaseYear] = releaseYear
             }
             TablaAlbumes.select { TablaAlbumes.id eq nuevoId }
@@ -63,9 +63,9 @@ class AlbumRepositorioImpl : AlbumRepositorio {
             TablaCanciones.select { TablaCanciones.albumId eq id }.count() > 0
         }
 
-    override suspend fun obtenerPorArtista(artistaId: UUID): List<Album> =
+    override suspend fun obtenerPorArtista(artistId: UUID): List<Album> =
         GestorBaseDatos.consulta {
-            TablaAlbumes.select { TablaAlbumes.artistaId eq artistaId }
+            TablaAlbumes.select { TablaAlbumes.artistId eq artistId }
                 .map { filaAAlbum(it) }
         }
 }

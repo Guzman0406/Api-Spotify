@@ -6,5 +6,5 @@ data class Album(
     val id: UUID,
     val title: String,
     val releaseYear: Int,
-    val artistaId: UUID
+    val artistId: UUID
 )

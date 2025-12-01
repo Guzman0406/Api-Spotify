@@ -29,14 +29,16 @@ class ServicioArtistas(
     suspend fun actualizarArtista(id: String, name: String?, genre: String?): Artista {
         val artistaId = parsearUUID(id) ?: throw DatosInvalidosException("ID de artista inválido: $id")
 
-        val artistaExistente = artistaRepositorio.obtenerPorId(artistaId)
+        artistaRepositorio.obtenerPorId(artistaId)
             ?: throw ArtistaNoEncontradoException("Artista no encontrado con ID: $id")
 
         validarDatosActualizacion(name, genre)
 
         val actualizado = artistaRepositorio.actualizar(artistaId, name, genre)
         if (!actualizado) {
-            throw RuntimeException("Error al actualizar el artista")
+            // Esta excepción es genérica porque si el artista existe, la actualización no debería fallar.
+            // Si falla, es un error inesperado del sistema.
+            throw RuntimeException("Error al actualizar el artista con ID: $id")
         }
 
         return artistaRepositorio.obtenerPorId(artistaId)!!
@@ -45,11 +47,16 @@ class ServicioArtistas(
     suspend fun eliminarArtista(id: String): Boolean {
         val artistaId = parsearUUID(id) ?: throw DatosInvalidosException("ID de artista inválido: $id")
 
-        // Protección contra borrado en cascada
+        // 1. Verificar que el artista existe
+        artistaRepositorio.obtenerPorId(artistaId)
+            ?: throw ArtistaNoEncontradoException("No se puede eliminar, artista no encontrado con ID: $id")
+
+        // 2. Verificar si tiene álbumes asociados (protección de integridad)
         if (artistaRepositorio.tieneAlbumes(artistaId)) {
-            throw ViolacionIntegridadException("No se puede eliminar el artista porque tiene álbumes asociados")
+            throw ViolacionIntegridadException("No se puede eliminar el artista porque tiene álbumes asociados.")
         }
 
+        // 3. Si todo está bien, eliminar
         return artistaRepositorio.eliminar(artistaId)
     }
 

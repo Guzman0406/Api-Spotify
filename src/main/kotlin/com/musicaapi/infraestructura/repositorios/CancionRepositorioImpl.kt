@@ -12,19 +12,19 @@ class CancionRepositorioImpl : CancionRepositorio {
 
     private fun filaACancion(fila: ResultRow) = Cancion(
         id = fila[TablaCanciones.id],
-        title = fila[TablaCanciones.title],
-        duration = fila[TablaCanciones.duration],
+        titulo = fila[TablaCanciones.titulo],
+        duracion = fila[TablaCanciones.duracion],
         albumId = fila[TablaCanciones.albumId]
     )
 
-    override suspend fun crear(title: String, albumId: UUID, duration: Int): Cancion =
+    override suspend fun crear(titulo: String, albumId: UUID, duracion: Int): Cancion =
         GestorBaseDatos.consulta {
             val nuevoId = UUID.randomUUID()
             TablaCanciones.insert {
                 it[id] = nuevoId
-                it[TablaCanciones.title] = title
+                it[TablaCanciones.titulo] = titulo
                 it[TablaCanciones.albumId] = albumId
-                it[TablaCanciones.duration] = duration
+                it[TablaCanciones.duracion] = duracion
             }
             TablaCanciones.select { TablaCanciones.id eq nuevoId }
                 .map { filaACancion(it) }
@@ -43,11 +43,11 @@ class CancionRepositorioImpl : CancionRepositorio {
             TablaCanciones.selectAll().map { filaACancion(it) }
         }
 
-    override suspend fun actualizar(id: UUID, title: String?, duration: Int?): Boolean =
+    override suspend fun actualizar(id: UUID, titulo: String?, duracion: Int?): Boolean =
         GestorBaseDatos.consulta {
             val filasActualizadas = TablaCanciones.update({ TablaCanciones.id eq id }) {
-                title?.let { t -> it[TablaCanciones.title] = t }
-                duration?.let { d -> it[TablaCanciones.duration] = d }
+                titulo?.let { t -> it[TablaCanciones.titulo] = t }
+                duracion?.let { d -> it[TablaCanciones.duracion] = d }
             }
             filasActualizadas > 0
         }

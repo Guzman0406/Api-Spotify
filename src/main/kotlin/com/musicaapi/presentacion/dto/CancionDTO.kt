@@ -7,16 +7,16 @@ import java.util.UUID
 @Serializable
 data class CancionDTO(
     val id: String,
-    val title: String,
-    val duration: Int,
+    val titulo: String,
+    val duracion: Int,
     val albumId: String
 ) {
     companion object {
         fun desdeDominio(cancion: Cancion): CancionDTO {
             return CancionDTO(
                 id = cancion.id.toString(),
-                title = cancion.title,
-                duration = cancion.duration,
+                titulo = cancion.titulo,
+                duracion = cancion.duracion,
                 albumId = cancion.albumId.toString()
             )
         }
@@ -25,13 +25,13 @@ data class CancionDTO(
 
 @Serializable
 data class CrearCancionRequest(
-    val title: String,
+    val titulo: String,
     val albumId: String,
-    val duration: Int
+    val duracion: Int
 )
 
 @Serializable
 data class ActualizarCancionRequest(
-    val title: String? = null,
-    val duration: Int? = null
+    val titulo: String? = null,
+    val duracion: Int? = null
 )

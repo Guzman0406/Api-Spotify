@@ -17,7 +17,7 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
         post {
             try {
                 val request = call.receive<CrearAlbumRequest>()
-                val album = servicioAlbumes.crearAlbum(request.title, request.artistaId, request.releaseYear)
+                val album = servicioAlbumes.crearAlbum(request.title, request.artistId, request.releaseYear)
                 val albumDTO = AlbumDTO.desdeDominio(album)
                 call.respond(HttpStatusCode.Created, albumDTO)
             } catch (e: DatosInvalidosException) {
@@ -25,7 +25,9 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
             } catch (e: ArtistaNoEncontradoException) {
                 call.respond(HttpStatusCode.NotFound, mapOf("error" to e.message))
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error interno del servidor"))
+                // Log del error para depuración
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error interno del servidor: ${e.localizedMessage}"))
             }
         }
 
@@ -36,7 +38,8 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
                 val albumesDTO = albumes.map { AlbumDTO.desdeDominio(it) }
                 call.respond(HttpStatusCode.OK, albumesDTO)
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener álbumes"))
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener álbumes: ${e.localizedMessage}"))
             }
         }
 
@@ -55,7 +58,8 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
             } catch (e: DatosInvalidosException) {
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener álbum"))
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener álbum: ${e.localizedMessage}"))
             }
         }
 
@@ -75,7 +79,8 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
             } catch (e: DatosInvalidosException) {
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al actualizar álbum"))
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al actualizar álbum: ${e.localizedMessage}"))
             }
         }
 
@@ -90,6 +95,7 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
                 if (eliminado) {
                     call.respond(HttpStatusCode.OK, mapOf("mensaje" to "Álbum eliminado correctamente"))
                 } else {
+                    // Este caso no debería ocurrir si la lógica del servicio es correcta
                     call.respond(HttpStatusCode.NotFound, mapOf("error" to "Álbum no encontrado"))
                 }
             } catch (e: AlbumNoEncontradoException) {
@@ -99,24 +105,8 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
             } catch (e: DatosInvalidosException) {
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al eliminar álbum"))
-            }
-        }
-
-        // GET /artistas/{artistaId}/albumes - Obtener álbumes por artista
-        get("/artistas/{artistaId}/albumes") {
-            val artistaId = call.parameters["artistaId"] ?: return@get call.respond(
-                HttpStatusCode.BadRequest, mapOf("error" to "ID de artista requerido")
-            )
-
-            try {
-                val albumes = servicioAlbumes.obtenerAlbumesPorArtista(artistaId)
-                val albumesDTO = albumes.map { AlbumDTO.desdeDominio(it) }
-                call.respond(HttpStatusCode.OK, albumesDTO)
-            } catch (e: DatosInvalidosException) {
-                call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener álbumes del artista"))
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al eliminar álbum: ${e.localizedMessage}"))
             }
         }
     }

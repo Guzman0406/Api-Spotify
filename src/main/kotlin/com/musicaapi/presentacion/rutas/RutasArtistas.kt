@@ -1,5 +1,6 @@
 package com.musicaapi.presentacion.rutas
 
+import com.musicaapi.aplicacion.servicios.ServicioAlbumes
 import com.musicaapi.aplicacion.servicios.ServicioArtistas
 import com.musicaapi.presentacion.dto.*
 import com.musicaapi.infraestructura.excepciones.*
@@ -9,7 +10,10 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.configurarRutasArtistas(servicioArtistas: ServicioArtistas) {
+fun Route.configurarRutasArtistas(
+    servicioArtistas: ServicioArtistas,
+    servicioAlbumes: ServicioAlbumes
+) {
 
     route("/artistas") {
 
@@ -98,6 +102,24 @@ fun Route.configurarRutasArtistas(servicioArtistas: ServicioArtistas) {
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al eliminar artista"))
+            }
+        }
+
+        // GET /artistas/{artistId}/albumes - Obtener álbumes por artista
+        get("{artistId}/albumes") {
+            val artistId = call.parameters["artistId"] ?: return@get call.respond(
+                HttpStatusCode.BadRequest, mapOf("error" to "ID de artista requerido")
+            )
+
+            try {
+                val albumes = servicioAlbumes.obtenerAlbumesPorArtista(artistId)
+                val albumesDTO = albumes.map { AlbumDTO.desdeDominio(it) }
+                call.respond(HttpStatusCode.OK, albumesDTO)
+            } catch (e: DatosInvalidosException) {
+                call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener álbumes del artista: ${e.localizedMessage}"))
             }
         }
     }

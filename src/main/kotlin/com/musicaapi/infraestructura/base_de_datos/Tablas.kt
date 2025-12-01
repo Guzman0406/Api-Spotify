@@ -15,15 +15,15 @@ object TablaAlbumes : Table("albumes") {
     val id = uuid("id")
     val title = varchar("title", length = 150)
     val releaseYear = integer("release_year")
-    val artistaId = uuid("artista_id").references(TablaArtistas.id, onDelete = ReferenceOption.RESTRICT)
+    val artistId = uuid("artist_id").references(TablaArtistas.id, onDelete = ReferenceOption.RESTRICT)
 
     override val primaryKey = PrimaryKey(id)
 }
 
 object TablaCanciones : Table("canciones") {
     val id = uuid("id")
-    val title = varchar("title", length = 150)
-    val duration = integer("duration")
+    val titulo = varchar("titulo", length = 150)
+    val duracion = integer("duracion")
     val albumId = uuid("album_id").references(TablaAlbumes.id, onDelete = ReferenceOption.RESTRICT)
 
     override val primaryKey = PrimaryKey(id)

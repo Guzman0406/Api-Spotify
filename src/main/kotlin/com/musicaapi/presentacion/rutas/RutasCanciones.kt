@@ -17,7 +17,7 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
         post {
             try {
                 val request = call.receive<CrearCancionRequest>()
-                val cancion = servicioCanciones.crearCancion(request.title, request.albumId, request.duration)
+                val cancion = servicioCanciones.crearCancion(request.titulo, request.albumId, request.duracion)
                 val cancionDTO = CancionDTO.desdeDominio(cancion)
                 call.respond(HttpStatusCode.Created, cancionDTO)
             } catch (e: DatosInvalidosException) {
@@ -25,7 +25,8 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
             } catch (e: AlbumNoEncontradoException) {
                 call.respond(HttpStatusCode.NotFound, mapOf("error" to e.message))
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error interno del servidor"))
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error interno del servidor: ${e.localizedMessage}"))
             }
         }
 
@@ -36,7 +37,8 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
                 val cancionesDTO = canciones.map { CancionDTO.desdeDominio(it) }
                 call.respond(HttpStatusCode.OK, cancionesDTO)
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener canciones"))
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener canciones: ${e.localizedMessage}"))
             }
         }
 
@@ -55,7 +57,8 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
             } catch (e: DatosInvalidosException) {
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener canción"))
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener canción: ${e.localizedMessage}"))
             }
         }
 
@@ -67,7 +70,7 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
 
             try {
                 val request = call.receive<ActualizarCancionRequest>()
-                val cancion = servicioCanciones.actualizarCancion(id, request.title, request.duration)
+                val cancion = servicioCanciones.actualizarCancion(id, request.titulo, request.duracion)
                 val cancionDTO = CancionDTO.desdeDominio(cancion)
                 call.respond(HttpStatusCode.OK, cancionDTO)
             } catch (e: CancionNoEncontradaException) {
@@ -75,7 +78,8 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
             } catch (e: DatosInvalidosException) {
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al actualizar canción"))
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al actualizar canción: ${e.localizedMessage}"))
             }
         }
 
@@ -97,7 +101,8 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
             } catch (e: DatosInvalidosException) {
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al eliminar canción"))
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al eliminar canción: ${e.localizedMessage}"))
             }
         }
 
@@ -114,7 +119,8 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
             } catch (e: DatosInvalidosException) {
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener canciones del álbum"))
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener canciones del álbum: ${e.localizedMessage}"))
             }
         }
     }

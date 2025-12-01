@@ -9,7 +9,7 @@ data class AlbumDTO(
     val id: String,
     val title: String,
     val releaseYear: Int,
-    val artistaId: String
+    val artistId: String
 ) {
     companion object {
         fun desdeDominio(album: Album): AlbumDTO {
@@ -17,7 +17,7 @@ data class AlbumDTO(
                 id = album.id.toString(),
                 title = album.title,
                 releaseYear = album.releaseYear,
-                artistaId = album.artistaId.toString()
+                artistId = album.artistId.toString()
             )
         }
     }
@@ -26,7 +26,7 @@ data class AlbumDTO(
 @Serializable
 data class CrearAlbumRequest(
     val title: String,
-    val artistaId: String,
+    val artistId: String,
     val releaseYear: Int
 )
 

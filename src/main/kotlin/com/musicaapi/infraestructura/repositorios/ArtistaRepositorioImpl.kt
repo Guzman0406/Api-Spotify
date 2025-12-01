@@ -58,6 +58,6 @@ class ArtistaRepositorioImpl : ArtistaRepositorio {
 
     override suspend fun tieneAlbumes(id: UUID): Boolean =
         GestorBaseDatos.consulta {
-            TablaAlbumes.select { TablaAlbumes.artistaId eq id }.count() > 0
+            TablaAlbumes.select { TablaAlbumes.artistId eq id }.count() > 0
         }
 }

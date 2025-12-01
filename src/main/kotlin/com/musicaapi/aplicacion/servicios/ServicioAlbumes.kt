@@ -14,14 +14,14 @@ class ServicioAlbumes(
     private val artistaRepositorio: ArtistaRepositorio
 ) {
 
-    suspend fun crearAlbum(title: String, artistaId: String, releaseYear: Int): Album {
+    suspend fun crearAlbum(title: String, artistId: String, releaseYear: Int): Album {
         validarDatosAlbum(title, releaseYear)
 
-        val artistaUUID = parsearUUID(artistaId) ?: throw DatosInvalidosException("ID de artista inválido: $artistaId")
+        val artistaUUID = parsearUUID(artistId) ?: throw DatosInvalidosException("ID de artista inválido: $artistId")
 
         // Verificar que el artista existe
         val artista = artistaRepositorio.obtenerPorId(artistaUUID)
-            ?: throw ArtistaNoEncontradoException("Artista no encontrado con ID: $artistaId")
+            ?: throw ArtistaNoEncontradoException("Artista no encontrado con ID: $artistId")
 
         return albumRepositorio.crear(title, artista.id, releaseYear)
     }
@@ -63,8 +63,8 @@ class ServicioAlbumes(
         return albumRepositorio.eliminar(albumId)
     }
 
-    suspend fun obtenerAlbumesPorArtista(artistaId: String): List<Album> {
-        val artistaUUID = parsearUUID(artistaId) ?: throw DatosInvalidosException("ID de artista inválido: $artistaId")
+    suspend fun obtenerAlbumesPorArtista(artistId: String): List<Album> {
+        val artistaUUID = parsearUUID(artistId) ?: throw DatosInvalidosException("ID de artista inválido: $artistId")
         return albumRepositorio.obtenerPorArtista(artistaUUID)
     }
 

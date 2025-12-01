@@ -68,7 +68,7 @@ fun Application.module() {
         }
 
         // Configurar rutas de la API
-        configurarRutasArtistas(servicioArtistas)
+        configurarRutasArtistas(servicioArtistas, servicioAlbumes)
         configurarRutasAlbumes(servicioAlbumes)
         configurarRutasCanciones(servicioCanciones)
     }
