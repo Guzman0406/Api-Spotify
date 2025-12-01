@@ -4,7 +4,7 @@ import java.util.UUID
 
 data class Cancion(
     val id: UUID,
-    val titulo: String,
-    val duracion: Int,
+    val title: String,
+    val duration: Int,
     val albumId: UUID
 )

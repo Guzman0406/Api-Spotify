@@ -13,19 +13,19 @@ class AlbumRepositorioImpl : AlbumRepositorio {
 
     private fun filaAAlbum(fila: ResultRow) = Album(
         id = fila[TablaAlbumes.id],
-        titulo = fila[TablaAlbumes.titulo],
-        añoLanzamiento = fila[TablaAlbumes.añoLanzamiento],
+        title = fila[TablaAlbumes.title],
+        releaseYear = fila[TablaAlbumes.releaseYear],
         artistaId = fila[TablaAlbumes.artistaId]
     )
 
-    override suspend fun crear(titulo: String, artistaId: UUID, añoLanzamiento: Int): Album =
+    override suspend fun crear(title: String, artistaId: UUID, releaseYear: Int): Album =
         GestorBaseDatos.consulta {
             val nuevoId = UUID.randomUUID()
             TablaAlbumes.insert {
                 it[id] = nuevoId
-                it[TablaAlbumes.titulo] = titulo
+                it[TablaAlbumes.title] = title
                 it[TablaAlbumes.artistaId] = artistaId
-                it[TablaAlbumes.añoLanzamiento] = añoLanzamiento
+                it[TablaAlbumes.releaseYear] = releaseYear
             }
             TablaAlbumes.select { TablaAlbumes.id eq nuevoId }
                 .map { filaAAlbum(it) }
@@ -44,11 +44,11 @@ class AlbumRepositorioImpl : AlbumRepositorio {
             TablaAlbumes.selectAll().map { filaAAlbum(it) }
         }
 
-    override suspend fun actualizar(id: UUID, titulo: String?, añoLanzamiento: Int?): Boolean =
+    override suspend fun actualizar(id: UUID, title: String?, releaseYear: Int?): Boolean =
         GestorBaseDatos.consulta {
             val filasActualizadas = TablaAlbumes.update({ TablaAlbumes.id eq id }) {
-                titulo?.let { t -> it[TablaAlbumes.titulo] = t }
-                añoLanzamiento?.let { a -> it[TablaAlbumes.añoLanzamiento] = a }
+                title?.let { t -> it[TablaAlbumes.title] = t }
+                releaseYear?.let { a -> it[TablaAlbumes.releaseYear] = a }
             }
             filasActualizadas > 0
         }

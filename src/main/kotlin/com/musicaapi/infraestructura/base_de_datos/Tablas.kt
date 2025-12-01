@@ -5,16 +5,16 @@ import org.jetbrains.exposed.sql.ReferenceOption
 
 object TablaArtistas : Table("artistas") {
     val id = uuid("id")
-    val nombre = varchar("nombre", length = 100)
-    val genero = varchar("genero", length = 50)
+    val name = varchar("name", length = 100)
+    val genre = varchar("genre", length = 50)
 
     override val primaryKey = PrimaryKey(id)
 }
 
 object TablaAlbumes : Table("albumes") {
     val id = uuid("id")
-    val titulo = varchar("titulo", length = 150)
-    val añoLanzamiento = integer("año_lanzamiento")
+    val title = varchar("title", length = 150)
+    val releaseYear = integer("release_year")
     val artistaId = uuid("artista_id").references(TablaArtistas.id, onDelete = ReferenceOption.RESTRICT)
 
     override val primaryKey = PrimaryKey(id)
@@ -22,8 +22,8 @@ object TablaAlbumes : Table("albumes") {
 
 object TablaCanciones : Table("canciones") {
     val id = uuid("id")
-    val titulo = varchar("titulo", length = 150)
-    val duracion = integer("duracion")
+    val title = varchar("title", length = 150)
+    val duration = integer("duration")
     val albumId = uuid("album_id").references(TablaAlbumes.id, onDelete = ReferenceOption.RESTRICT)
 
     override val primaryKey = PrimaryKey(id)

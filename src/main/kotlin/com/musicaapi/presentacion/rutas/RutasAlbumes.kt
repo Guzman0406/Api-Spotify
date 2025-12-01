@@ -17,7 +17,7 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
         post {
             try {
                 val request = call.receive<CrearAlbumRequest>()
-                val album = servicioAlbumes.crearAlbum(request.titulo, request.artistaId, request.añoLanzamiento)
+                val album = servicioAlbumes.crearAlbum(request.title, request.artistaId, request.releaseYear)
                 val albumDTO = AlbumDTO.desdeDominio(album)
                 call.respond(HttpStatusCode.Created, albumDTO)
             } catch (e: DatosInvalidosException) {
@@ -67,7 +67,7 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
 
             try {
                 val request = call.receive<ActualizarAlbumRequest>()
-                val album = servicioAlbumes.actualizarAlbum(id, request.titulo, request.añoLanzamiento)
+                val album = servicioAlbumes.actualizarAlbum(id, request.title, request.releaseYear)
                 val albumDTO = AlbumDTO.desdeDominio(album)
                 call.respond(HttpStatusCode.OK, albumDTO)
             } catch (e: AlbumNoEncontradoException) {

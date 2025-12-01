@@ -1,21 +1,22 @@
 package com.musicaapi.presentacion.dto
 
+import com.musicaapi.dominio.modelos.Cancion
 import kotlinx.serialization.Serializable
 import java.util.UUID
 
 @Serializable
 data class CancionDTO(
     val id: String,
-    val titulo: String,
-    val duracion: Int,
+    val title: String,
+    val duration: Int,
     val albumId: String
 ) {
     companion object {
-        fun desdeDominio(cancion: com.musicaapi.dominio.modelos.Cancion): CancionDTO {
+        fun desdeDominio(cancion: Cancion): CancionDTO {
             return CancionDTO(
                 id = cancion.id.toString(),
-                titulo = cancion.titulo,
-                duracion = cancion.duracion,
+                title = cancion.title,
+                duration = cancion.duration,
                 albumId = cancion.albumId.toString()
             )
         }
@@ -24,13 +25,13 @@ data class CancionDTO(
 
 @Serializable
 data class CrearCancionRequest(
-    val titulo: String,
+    val title: String,
     val albumId: String,
-    val duracion: Int
+    val duration: Int
 )
 
 @Serializable
 data class ActualizarCancionRequest(
-    val titulo: String? = null,
-    val duracion: Int? = null
+    val title: String? = null,
+    val duration: Int? = null
 )

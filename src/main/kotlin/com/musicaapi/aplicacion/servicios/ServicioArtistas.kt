@@ -11,9 +11,9 @@ class ServicioArtistas(
     private val artistaRepositorio: ArtistaRepositorio
 ) {
 
-    suspend fun crearArtista(nombre: String, genero: String): Artista {
-        validarDatosArtista(nombre, genero)
-        return artistaRepositorio.crear(nombre, genero)
+    suspend fun crearArtista(name: String, genre: String): Artista {
+        validarDatosArtista(name, genre)
+        return artistaRepositorio.crear(name, genre)
     }
 
     suspend fun obtenerArtistaPorId(id: String): Artista {
@@ -26,15 +26,15 @@ class ServicioArtistas(
         return artistaRepositorio.obtenerTodos()
     }
 
-    suspend fun actualizarArtista(id: String, nombre: String?, genero: String?): Artista {
+    suspend fun actualizarArtista(id: String, name: String?, genre: String?): Artista {
         val artistaId = parsearUUID(id) ?: throw DatosInvalidosException("ID de artista inválido: $id")
 
         val artistaExistente = artistaRepositorio.obtenerPorId(artistaId)
             ?: throw ArtistaNoEncontradoException("Artista no encontrado con ID: $id")
 
-        validarDatosActualizacion(nombre, genero)
+        validarDatosActualizacion(name, genre)
 
-        val actualizado = artistaRepositorio.actualizar(artistaId, nombre, genero)
+        val actualizado = artistaRepositorio.actualizar(artistaId, name, genre)
         if (!actualizado) {
             throw RuntimeException("Error al actualizar el artista")
         }
@@ -53,27 +53,27 @@ class ServicioArtistas(
         return artistaRepositorio.eliminar(artistaId)
     }
 
-    private fun validarDatosArtista(nombre: String, genero: String) {
-        if (nombre.isBlank()) {
+    private fun validarDatosArtista(name: String, genre: String) {
+        if (name.isBlank()) {
             throw DatosInvalidosException("El nombre del artista no puede estar vacío")
         }
-        if (genero.isBlank()) {
+        if (genre.isBlank()) {
             throw DatosInvalidosException("El género del artista no puede estar vacío")
         }
-        if (nombre.length > 100) {
+        if (name.length > 100) {
             throw DatosInvalidosException("El nombre del artista no puede tener más de 100 caracteres")
         }
-        if (genero.length > 50) {
+        if (genre.length > 50) {
             throw DatosInvalidosException("El género del artista no puede tener más de 50 caracteres")
         }
     }
 
-    private fun validarDatosActualizacion(nombre: String?, genero: String?) {
-        nombre?.let {
+    private fun validarDatosActualizacion(name: String?, genre: String?) {
+        name?.let {
             if (it.isBlank()) throw DatosInvalidosException("El nombre del artista no puede estar vacío")
             if (it.length > 100) throw DatosInvalidosException("El nombre del artista no puede tener más de 100 caracteres")
         }
-        genero?.let {
+        genre?.let {
             if (it.isBlank()) throw DatosInvalidosException("El género del artista no puede estar vacío")
             if (it.length > 50) throw DatosInvalidosException("El género del artista no puede tener más de 50 caracteres")
         }

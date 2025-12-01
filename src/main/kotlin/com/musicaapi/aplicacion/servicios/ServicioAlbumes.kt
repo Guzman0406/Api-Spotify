@@ -14,8 +14,8 @@ class ServicioAlbumes(
     private val artistaRepositorio: ArtistaRepositorio
 ) {
 
-    suspend fun crearAlbum(titulo: String, artistaId: String, añoLanzamiento: Int): Album {
-        validarDatosAlbum(titulo, añoLanzamiento)
+    suspend fun crearAlbum(title: String, artistaId: String, releaseYear: Int): Album {
+        validarDatosAlbum(title, releaseYear)
 
         val artistaUUID = parsearUUID(artistaId) ?: throw DatosInvalidosException("ID de artista inválido: $artistaId")
 
@@ -23,7 +23,7 @@ class ServicioAlbumes(
         val artista = artistaRepositorio.obtenerPorId(artistaUUID)
             ?: throw ArtistaNoEncontradoException("Artista no encontrado con ID: $artistaId")
 
-        return albumRepositorio.crear(titulo, artista.id, añoLanzamiento)
+        return albumRepositorio.crear(title, artista.id, releaseYear)
     }
 
     suspend fun obtenerAlbumPorId(id: String): Album {
@@ -36,15 +36,15 @@ class ServicioAlbumes(
         return albumRepositorio.obtenerTodos()
     }
 
-    suspend fun actualizarAlbum(id: String, titulo: String?, añoLanzamiento: Int?): Album {
+    suspend fun actualizarAlbum(id: String, title: String?, releaseYear: Int?): Album {
         val albumId = parsearUUID(id) ?: throw DatosInvalidosException("ID de álbum inválido: $id")
 
         val albumExistente = albumRepositorio.obtenerPorId(albumId)
             ?: throw AlbumNoEncontradoException("Álbum no encontrado con ID: $id")
 
-        validarDatosActualizacion(titulo, añoLanzamiento)
+        validarDatosActualizacion(title, releaseYear)
 
-        val actualizado = albumRepositorio.actualizar(albumId, titulo, añoLanzamiento)
+        val actualizado = albumRepositorio.actualizar(albumId, title, releaseYear)
         if (!actualizado) {
             throw RuntimeException("Error al actualizar el álbum")
         }
@@ -68,24 +68,24 @@ class ServicioAlbumes(
         return albumRepositorio.obtenerPorArtista(artistaUUID)
     }
 
-    private fun validarDatosAlbum(titulo: String, añoLanzamiento: Int) {
-        if (titulo.isBlank()) {
+    private fun validarDatosAlbum(title: String, releaseYear: Int) {
+        if (title.isBlank()) {
             throw DatosInvalidosException("El título del álbum no puede estar vacío")
         }
-        if (titulo.length > 150) {
+        if (title.length > 150) {
             throw DatosInvalidosException("El título del álbum no puede tener más de 150 caracteres")
         }
-        if (añoLanzamiento < 1900 || añoLanzamiento > 2100) {
+        if (releaseYear < 1900 || releaseYear > 2100) {
             throw DatosInvalidosException("El año de lanzamiento debe estar entre 1900 y 2100")
         }
     }
 
-    private fun validarDatosActualizacion(titulo: String?, añoLanzamiento: Int?) {
-        titulo?.let {
+    private fun validarDatosActualizacion(title: String?, releaseYear: Int?) {
+        title?.let {
             if (it.isBlank()) throw DatosInvalidosException("El título del álbum no puede estar vacío")
             if (it.length > 150) throw DatosInvalidosException("El título del álbum no puede tener más de 150 caracteres")
         }
-        añoLanzamiento?.let {
+        releaseYear?.let {
             if (it < 1900 || it > 2100) throw DatosInvalidosException("El año de lanzamiento debe estar entre 1900 y 2100")
         }
     }

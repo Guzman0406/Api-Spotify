@@ -13,8 +13,8 @@ class ServicioCanciones(
     private val albumRepositorio: AlbumRepositorio
 ) {
 
-    suspend fun crearCancion(titulo: String, albumId: String, duracion: Int): Cancion {
-        validarDatosCancion(titulo, duracion)
+    suspend fun crearCancion(title: String, albumId: String, duration: Int): Cancion {
+        validarDatosCancion(title, duration)
 
         val albumUUID = parsearUUID(albumId) ?: throw DatosInvalidosException("ID de álbum inválido: $albumId")
 
@@ -22,7 +22,7 @@ class ServicioCanciones(
         val album = albumRepositorio.obtenerPorId(albumUUID)
             ?: throw AlbumNoEncontradoException("Álbum no encontrado con ID: $albumId")
 
-        return cancionRepositorio.crear(titulo, album.id, duracion)
+        return cancionRepositorio.crear(title, album.id, duration)
     }
 
     suspend fun obtenerCancionPorId(id: String): Cancion {
@@ -35,15 +35,15 @@ class ServicioCanciones(
         return cancionRepositorio.obtenerTodos()
     }
 
-    suspend fun actualizarCancion(id: String, titulo: String?, duracion: Int?): Cancion {
+    suspend fun actualizarCancion(id: String, title: String?, duration: Int?): Cancion {
         val cancionId = parsearUUID(id) ?: throw DatosInvalidosException("ID de canción inválido: $id")
 
         val cancionExistente = cancionRepositorio.obtenerPorId(cancionId)
             ?: throw CancionNoEncontradaException("Canción no encontrada con ID: $id")
 
-        validarDatosActualizacion(titulo, duracion)
+        validarDatosActualizacion(title, duration)
 
-        val actualizado = cancionRepositorio.actualizar(cancionId, titulo, duracion)
+        val actualizado = cancionRepositorio.actualizar(cancionId, title, duration)
         if (!actualizado) {
             throw RuntimeException("Error al actualizar la canción")
         }
@@ -61,27 +61,27 @@ class ServicioCanciones(
         return cancionRepositorio.obtenerPorAlbum(albumUUID)
     }
 
-    private fun validarDatosCancion(titulo: String, duracion: Int) {
-        if (titulo.isBlank()) {
+    private fun validarDatosCancion(title: String, duration: Int) {
+        if (title.isBlank()) {
             throw DatosInvalidosException("El título de la canción no puede estar vacío")
         }
-        if (titulo.length > 150) {
+        if (title.length > 150) {
             throw DatosInvalidosException("El título de la canción no puede tener más de 150 caracteres")
         }
-        if (duracion <= 0) {
+        if (duration <= 0) {
             throw DatosInvalidosException("La duración de la canción debe ser mayor a 0 segundos")
         }
-        if (duracion > 3600) { // 1 hora máxima
+        if (duration > 3600) { // 1 hora máxima
             throw DatosInvalidosException("La duración de la canción no puede ser mayor a 3600 segundos")
         }
     }
 
-    private fun validarDatosActualizacion(titulo: String?, duracion: Int?) {
-        titulo?.let {
+    private fun validarDatosActualizacion(title: String?, duration: Int?) {
+        title?.let {
             if (it.isBlank()) throw DatosInvalidosException("El título de la canción no puede estar vacío")
             if (it.length > 150) throw DatosInvalidosException("El título de la canción no puede tener más de 150 caracteres")
         }
-        duracion?.let {
+        duration?.let {
             if (it <= 0) throw DatosInvalidosException("La duración de la canción debe ser mayor a 0 segundos")
             if (it > 3600) throw DatosInvalidosException("La duración de la canción no puede ser mayor a 3600 segundos")
         }

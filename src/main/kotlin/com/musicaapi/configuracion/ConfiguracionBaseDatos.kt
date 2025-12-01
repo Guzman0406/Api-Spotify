@@ -6,11 +6,11 @@ import io.ktor.server.application.Application
 fun Application.configurarBaseDatos() {
     val dbUrl = environment.config.propertyOrNull("database.url")?.getString()
         ?: System.getenv("DATABASE_URL")
-        ?: "jdbc:postgresql://localhost:5432/musica_db"
+        ?: "jdbc:postgresql://localhost:5432/spotify"
 
     val dbUser = environment.config.propertyOrNull("database.user")?.getString()
         ?: System.getenv("DATABASE_USER")
-        ?: "postgres"
+        ?: "Guzmán"
 
     val dbPassword = environment.config.propertyOrNull("database.password")?.getString()
         ?: System.getenv("DATABASE_PASSWORD")

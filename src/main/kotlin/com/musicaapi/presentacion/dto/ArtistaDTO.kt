@@ -1,20 +1,21 @@
 package com.musicaapi.presentacion.dto
 
+import com.musicaapi.dominio.modelos.Artista
 import kotlinx.serialization.Serializable
 import java.util.UUID
 
 @Serializable
 data class ArtistaDTO(
     val id: String,
-    val nombre: String,
-    val genero: String
+    val name: String,
+    val genre: String
 ) {
     companion object {
-        fun desdeDominio(artista: com.musicaapi.dominio.modelos.Artista): ArtistaDTO {
+        fun desdeDominio(artista: Artista): ArtistaDTO {
             return ArtistaDTO(
                 id = artista.id.toString(),
-                nombre = artista.nombre,
-                genero = artista.genero
+                name = artista.name,
+                genre = artista.genre
             )
         }
     }
@@ -22,12 +23,12 @@ data class ArtistaDTO(
 
 @Serializable
 data class CrearArtistaRequest(
-    val nombre: String,
-    val genero: String
+    val name: String,
+    val genre: String
 )
 
 @Serializable
 data class ActualizarArtistaRequest(
-    val nombre: String? = null,
-    val genero: String? = null
+    val name: String? = null,
+    val genre: String? = null
 )

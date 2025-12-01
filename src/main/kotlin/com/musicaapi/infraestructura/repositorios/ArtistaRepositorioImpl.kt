@@ -13,17 +13,17 @@ class ArtistaRepositorioImpl : ArtistaRepositorio {
 
     private fun filaAArtista(fila: ResultRow) = Artista(
         id = fila[TablaArtistas.id],
-        nombre = fila[TablaArtistas.nombre],
-        genero = fila[TablaArtistas.genero]
+        name = fila[TablaArtistas.name],
+        genre = fila[TablaArtistas.genre]
     )
 
-    override suspend fun crear(nombre: String, genero: String): Artista =
+    override suspend fun crear(name: String, genre: String): Artista =
         GestorBaseDatos.consulta {
             val nuevoId = UUID.randomUUID()
             TablaArtistas.insert {
                 it[id] = nuevoId
-                it[TablaArtistas.nombre] = nombre
-                it[TablaArtistas.genero] = genero
+                it[TablaArtistas.name] = name
+                it[TablaArtistas.genre] = genre
             }
             TablaArtistas.select { TablaArtistas.id eq nuevoId }
                 .map { filaAArtista(it) }
@@ -42,11 +42,11 @@ class ArtistaRepositorioImpl : ArtistaRepositorio {
             TablaArtistas.selectAll().map { filaAArtista(it) }
         }
 
-    override suspend fun actualizar(id: UUID, nombre: String?, genero: String?): Boolean =
+    override suspend fun actualizar(id: UUID, name: String?, genre: String?): Boolean =
         GestorBaseDatos.consulta {
             val filasActualizadas = TablaArtistas.update({ TablaArtistas.id eq id }) {
-                nombre?.let { n -> it[TablaArtistas.nombre] = n }
-                genero?.let { g -> it[TablaArtistas.genero] = g }
+                name?.let { n -> it[TablaArtistas.name] = n }
+                genre?.let { g -> it[TablaArtistas.genre] = g }
             }
             filasActualizadas > 0
         }

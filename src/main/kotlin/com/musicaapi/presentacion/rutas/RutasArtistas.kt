@@ -17,7 +17,7 @@ fun Route.configurarRutasArtistas(servicioArtistas: ServicioArtistas) {
         post {
             try {
                 val request = call.receive<CrearArtistaRequest>()
-                val artista = servicioArtistas.crearArtista(request.nombre, request.genero)
+                val artista = servicioArtistas.crearArtista(request.name, request.genre)
                 val artistaDTO = ArtistaDTO.desdeDominio(artista)
                 call.respond(HttpStatusCode.Created, artistaDTO)
             } catch (e: DatosInvalidosException) {
@@ -65,7 +65,7 @@ fun Route.configurarRutasArtistas(servicioArtistas: ServicioArtistas) {
 
             try {
                 val request = call.receive<ActualizarArtistaRequest>()
-                val artista = servicioArtistas.actualizarArtista(id, request.nombre, request.genero)
+                val artista = servicioArtistas.actualizarArtista(id, request.name, request.genre)
                 val artistaDTO = ArtistaDTO.desdeDominio(artista)
                 call.respond(HttpStatusCode.OK, artistaDTO)
             } catch (e: ArtistaNoEncontradoException) {

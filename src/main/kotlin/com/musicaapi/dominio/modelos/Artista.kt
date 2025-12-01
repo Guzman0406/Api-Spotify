@@ -4,6 +4,6 @@ import java.util.UUID
 
 data class Artista(
     val id: UUID,
-    val nombre: String,
-    val genero: String
+    val name: String,
+    val genre: String
 )

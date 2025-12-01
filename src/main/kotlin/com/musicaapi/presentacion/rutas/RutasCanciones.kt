@@ -17,7 +17,7 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
         post {
             try {
                 val request = call.receive<CrearCancionRequest>()
-                val cancion = servicioCanciones.crearCancion(request.titulo, request.albumId, request.duracion)
+                val cancion = servicioCanciones.crearCancion(request.title, request.albumId, request.duration)
                 val cancionDTO = CancionDTO.desdeDominio(cancion)
                 call.respond(HttpStatusCode.Created, cancionDTO)
             } catch (e: DatosInvalidosException) {
@@ -67,7 +67,7 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
 
             try {
                 val request = call.receive<ActualizarCancionRequest>()
-                val cancion = servicioCanciones.actualizarCancion(id, request.titulo, request.duracion)
+                val cancion = servicioCanciones.actualizarCancion(id, request.title, request.duration)
                 val cancionDTO = CancionDTO.desdeDominio(cancion)
                 call.respond(HttpStatusCode.OK, cancionDTO)
             } catch (e: CancionNoEncontradaException) {
