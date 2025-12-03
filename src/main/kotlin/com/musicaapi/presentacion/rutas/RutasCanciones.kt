@@ -13,7 +13,6 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
 
     route("/canciones") {
 
-        // POST /canciones - Crear canción
         post {
             try {
                 val request = call.receive<CrearCancionRequest>()
@@ -30,7 +29,6 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
             }
         }
 
-        // GET /canciones - Obtener todas las canciones
         get {
             try {
                 val canciones = servicioCanciones.obtenerTodasLasCanciones()
@@ -42,7 +40,6 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
             }
         }
 
-        // GET /canciones/{id} - Obtener canción por ID
         get("{id}") {
             val id = call.parameters["id"] ?: return@get call.respond(
                 HttpStatusCode.BadRequest, mapOf("error" to "ID de canción requerido")
@@ -62,7 +59,6 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
             }
         }
 
-        // PUT /canciones/{id} - Actualizar canción
         put("{id}") {
             val id = call.parameters["id"] ?: return@put call.respond(
                 HttpStatusCode.BadRequest, mapOf("error" to "ID de canción requerido")
@@ -83,7 +79,6 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
             }
         }
 
-        // DELETE /canciones/{id} - Eliminar canción
         delete("{id}") {
             val id = call.parameters["id"] ?: return@delete call.respond(
                 HttpStatusCode.BadRequest, mapOf("error" to "ID de canción requerido")
@@ -106,7 +101,6 @@ fun Route.configurarRutasCanciones(servicioCanciones: ServicioCanciones) {
             }
         }
 
-        // GET /albumes/{albumId}/canciones - Obtener canciones por álbum
         get("/albumes/{albumId}/canciones") {
             val albumId = call.parameters["albumId"] ?: return@get call.respond(
                 HttpStatusCode.BadRequest, mapOf("error" to "ID de álbum requerido")

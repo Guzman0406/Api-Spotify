@@ -19,7 +19,6 @@ class ServicioAlbumes(
 
         val artistaUUID = parsearUUID(artistId) ?: throw DatosInvalidosException("ID de artista inválido: $artistId")
 
-        // Verificar que el artista existe
         val artista = artistaRepositorio.obtenerPorId(artistaUUID)
             ?: throw ArtistaNoEncontradoException("Artista no encontrado con ID: $artistId")
 
@@ -55,7 +54,6 @@ class ServicioAlbumes(
     suspend fun eliminarAlbum(id: String): Boolean {
         val albumId = parsearUUID(id) ?: throw DatosInvalidosException("ID de álbum inválido: $id")
 
-        // Protección contra borrado en cascada
         if (albumRepositorio.tieneCanciones(albumId)) {
             throw ViolacionIntegridadException("No se puede eliminar el álbum porque tiene canciones asociadas")
         }

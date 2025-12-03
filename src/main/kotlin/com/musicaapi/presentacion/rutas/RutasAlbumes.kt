@@ -13,7 +13,6 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
 
     route("/albumes") {
 
-        // POST /albumes - Crear álbum
         post {
             try {
                 val request = call.receive<CrearAlbumRequest>()
@@ -27,11 +26,13 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
             } catch (e: Exception) {
                 // Log del error para depuración
                 e.printStackTrace()
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error interno del servidor: ${e.localizedMessage}"))
+                call.respond(
+                    HttpStatusCode.InternalServerError,
+                    mapOf("error" to "Error interno del servidor: ${e.localizedMessage}")
+                )
             }
         }
 
-        // GET /albumes - Obtener todos los álbumes
         get {
             try {
                 val albumes = servicioAlbumes.obtenerTodosLosAlbumes()
@@ -39,11 +40,13 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
                 call.respond(HttpStatusCode.OK, albumesDTO)
             } catch (e: Exception) {
                 e.printStackTrace()
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener álbumes: ${e.localizedMessage}"))
+                call.respond(
+                    HttpStatusCode.InternalServerError,
+                    mapOf("error" to "Error al obtener álbumes: ${e.localizedMessage}")
+                )
             }
         }
 
-        // GET /albumes/{id} - Obtener álbum por ID
         get("{id}") {
             val id = call.parameters["id"] ?: return@get call.respond(
                 HttpStatusCode.BadRequest, mapOf("error" to "ID de álbum requerido")
@@ -59,11 +62,13 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
             } catch (e: Exception) {
                 e.printStackTrace()
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al obtener álbum: ${e.localizedMessage}"))
+                call.respond(
+                    HttpStatusCode.InternalServerError,
+                    mapOf("error" to "Error al obtener álbum: ${e.localizedMessage}")
+                )
             }
         }
 
-        // PUT /albumes/{id} - Actualizar álbum
         put("{id}") {
             val id = call.parameters["id"] ?: return@put call.respond(
                 HttpStatusCode.BadRequest, mapOf("error" to "ID de álbum requerido")
@@ -80,11 +85,12 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
                 call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
             } catch (e: Exception) {
                 e.printStackTrace()
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Error al actualizar álbum: ${e.localizedMessage}"))
+                call.respond(
+                    HttpStatusCode.InternalServerError,
+                    mapOf("error" to "Error al actualizar álbum: ${e.localizedMessage}")
+                )
             }
         }
-
-        // DELETE /albumes/{id} - Eliminar álbum
         delete("{id}") {
             val id = call.parameters["id"] ?: return@delete call.respond(
                 HttpStatusCode.BadRequest, mapOf("error" to "ID de álbum requerido")
@@ -95,7 +101,6 @@ fun Route.configurarRutasAlbumes(servicioAlbumes: ServicioAlbumes) {
                 if (eliminado) {
                     call.respond(HttpStatusCode.OK, mapOf("mensaje" to "Álbum eliminado correctamente"))
                 } else {
-                    // Este caso no debería ocurrir si la lógica del servicio es correcta
                     call.respond(HttpStatusCode.NotFound, mapOf("error" to "Álbum no encontrado"))
                 }
             } catch (e: AlbumNoEncontradoException) {

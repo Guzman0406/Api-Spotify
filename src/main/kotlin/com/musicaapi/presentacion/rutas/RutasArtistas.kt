@@ -17,7 +17,6 @@ fun Route.configurarRutasArtistas(
 
     route("/artistas") {
 
-        // POST /artistas - Crear artista
         post {
             try {
                 val request = call.receive<CrearArtistaRequest>()
@@ -31,7 +30,6 @@ fun Route.configurarRutasArtistas(
             }
         }
 
-        // GET /artistas - Obtener todos los artistas
         get {
             try {
                 val artistas = servicioArtistas.obtenerTodosLosArtistas()
@@ -42,7 +40,6 @@ fun Route.configurarRutasArtistas(
             }
         }
 
-        // GET /artistas/{id} - Obtener artista por ID
         get("{id}") {
             val id = call.parameters["id"] ?: return@get call.respond(
                 HttpStatusCode.BadRequest, mapOf("error" to "ID de artista requerido")
@@ -61,7 +58,6 @@ fun Route.configurarRutasArtistas(
             }
         }
 
-        // PUT /artistas/{id} - Actualizar artista
         put("{id}") {
             val id = call.parameters["id"] ?: return@put call.respond(
                 HttpStatusCode.BadRequest, mapOf("error" to "ID de artista requerido")
@@ -81,7 +77,6 @@ fun Route.configurarRutasArtistas(
             }
         }
 
-        // DELETE /artistas/{id} - Eliminar artista
         delete("{id}") {
             val id = call.parameters["id"] ?: return@delete call.respond(
                 HttpStatusCode.BadRequest, mapOf("error" to "ID de artista requerido")
@@ -105,7 +100,6 @@ fun Route.configurarRutasArtistas(
             }
         }
 
-        // GET /artistas/{artistId}/albumes - Obtener álbumes por artista
         get("{artistId}/albumes") {
             val artistId = call.parameters["artistId"] ?: return@get call.respond(
                 HttpStatusCode.BadRequest, mapOf("error" to "ID de artista requerido")

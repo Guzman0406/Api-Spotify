@@ -28,26 +28,22 @@ fun main() {
 }
 
 fun Application.module() {
-    println("🎵 Iniciando API de Música - Arquitectura por Capas")
+    println(" Iniciando API de Música ")
 
-    // Configuración
     configurarSerializacion()
     configurarCors()
     configurarBaseDatos()
 
-    // Inicialización de Repositorios
     val artistaRepositorio: ArtistaRepositorio = ArtistaRepositorioImpl()
     val albumRepositorio: AlbumRepositorio = AlbumRepositorioImpl()
     val cancionRepositorio: CancionRepositorio = CancionRepositorioImpl()
 
-    // Inicialización de Servicios
     val servicioArtistas = ServicioArtistas(artistaRepositorio)
     val servicioAlbumes = ServicioAlbumes(albumRepositorio, artistaRepositorio)
     val servicioCanciones = ServicioCanciones(cancionRepositorio, albumRepositorio)
 
-    // Configuración de Rutas
     routing {
-        // Ruta de salud
+
         get("/") {
             call.respond(HttpStatusCode.OK, mapOf(
                 "mensaje" to "🎵 API de Música funcionando correctamente",
@@ -67,14 +63,13 @@ fun Application.module() {
             ))
         }
 
-        // Configurar rutas de la API
         configurarRutasArtistas(servicioArtistas, servicioAlbumes)
         configurarRutasAlbumes(servicioAlbumes)
         configurarRutasCanciones(servicioCanciones)
     }
 
-    println("✅ Servidor iniciado en http://0.0.0.0:8080")
-    println("📚 Documentación de endpoints:")
+    println(" Servidor iniciado en http://0.0.0.0:8080")
+    println(" Documentación de endpoints:")
     println("   GET  /              - Estado de la API")
     println("   GET  /health        - Salud del sistema")
     println("   GET  /artistas      - Listar artistas")

@@ -18,7 +18,6 @@ class ServicioCanciones(
 
         val albumUUID = parsearUUID(albumId) ?: throw DatosInvalidosException("ID de álbum inválido: $albumId")
 
-        // Verificar que el álbum existe
         val album = albumRepositorio.obtenerPorId(albumUUID)
             ?: throw AlbumNoEncontradoException("Álbum no encontrado con ID: $albumId")
 
@@ -71,7 +70,7 @@ class ServicioCanciones(
         if (duracion <= 0) {
             throw DatosInvalidosException("La duración de la canción debe ser mayor a 0 segundos")
         }
-        if (duracion > 3600) { // 1 hora máxima
+        if (duracion > 3600) {
             throw DatosInvalidosException("La duración de la canción no puede ser mayor a 3600 segundos")
         }
     }
